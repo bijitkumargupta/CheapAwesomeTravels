@@ -1,0 +1,84 @@
+﻿@model WebBeds_Bijit.Models.HotelSearchRequest
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .form-main {
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+
+    .form-input-fields {
+        margin-bottom: 0;
+    }
+</style>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <!-- all the navigation stuff -->
+        <div class="col-md-3">
+            <h2 style="color: white">Search Hotels</h2>
+        </div>
+        <div class="col-md-9">
+            <form asp-action="Index" method="post" class="form-main  form-inline nofloat-xs pull-right pull-left-sm">
+                <div class="form-group form-input-fields form-group-lg has-feedback">
+                    <label class="sr-only" for="search">Search</label>
+                    <div class="input-group">
+                        <select class="custom-select form-control" asp-for="DestinationId" required>
+                            <option selected value="">Select Destination</option>
+                            <option value="279">India</option>
+                            <option value="1419">Dubai</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" min="1" asp-for="Nights" class="form-control" placeholder="Nights" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-lg btn-success btn-submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top: 30px; height: 300px">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Board Type</th>
+                <th scope="col">Hotel Name</th>
+                <th scope="col">Rate Type</th>
+                <th scope="col">Base Price</th>
+                <th scope="col">Actual Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var resultSet = ViewData["ResultSet"] as WebBedsAPI_Adapter.FindBargainResponseMessage;
+            }
+            @if (resultSet != null && resultSet.HotelDetails.Any())
+            {
+                @foreach (var hotel in resultSet.HotelDetails)
+                {
+                    <tr>
+                        <td>@hotel.BoardType</td>
+                        <td>@hotel.HotelName</td>
+                        <td>@hotel.RateType</td>
+                        <td>@hotel.BasePrice</td>
+                        <td>@hotel.ActualPrice</td>
+                    </tr>
+                }
+            }
+            else if (resultSet != null)
+            {
+                <tr>
+                    <td colspan="5" class="text-danger">No data found</td>
+                </tr>
+            }
+            else { }
+        </tbody>
+    </table>
+</div>
